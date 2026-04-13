@@ -1,17 +1,25 @@
 name: CI-CD
-on: 
+on:
   push:
-    branches: ['main']
-  workflow_dispatch:   
+    branches: ["main"]
+  workflow_dispatch:
 jobs:
   CI:
     runs-on: ubuntu-latest
     steps:
-    - name: Obtendo codigo Github
-      uses: actions/checkout@v6.0.2
-    - name: Autenticando no docker hub
-      uses: docker/login-action@v4.1.0
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-  
+      - name: Obtendo codigo Github
+        uses: actions/checkout@v6.0.2
+      - name: Autenticando no docker hub
+        uses: docker/login-action@v4.1.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Fazendo Build da image no docker
+        uses: docker/build-push-action@v7
+        with:
+          context: ./src
+          file: ./src/Dockerfile
+          push: true
+          tags: |
+            edersnk/aula-primeira-pipelina:v${{ github.run_number }}
+            edersnk/aula-primeira-pipelina:latest
