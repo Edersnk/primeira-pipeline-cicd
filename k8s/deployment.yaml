@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: edersnk/primeira-pipeline
+        image: edersnk/aula-primeira-pipeline
         ports:
         - containerPort: 5000
 --- 

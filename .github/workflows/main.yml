@@ -23,3 +23,20 @@ jobs:
           tags: |
             edersnk/aula-primeira-pipelina:v${{ github.run_number }}
             edersnk/aula-primeira-pipelina:latest
+  CD:
+    runs-on: ubuntu-latest
+    needs: [CI]
+    steps:
+      - name: Obtendo codigo Github
+        uses: actions/checkout@v6.0.2
+      - name: Configurando context kubeconfig
+        uses: azure/k8s-set-context@v5
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.K8S_CONFIG }}
+      - name: Executando maninfesto
+        uses: Azure/k8s-deploy@v5
+        with:
+          manifests: |
+            ./k8s/deployment.yaml
+          images: edersnk/aula-primeira-pipelina:v${{ github.run_number }}
